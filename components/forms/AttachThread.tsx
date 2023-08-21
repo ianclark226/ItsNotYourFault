@@ -3,7 +3,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod'
- import { PostValidation } from "@/lib/validations/thread";
+ import { AttachValidation } from "@/lib/validations/attach";
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -21,24 +21,19 @@ import * as z from 'zod'
 
 // import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
+import { createAttach } from "@/lib/actions/attach.action";
 
 interface Props {
-    user: {
-        id: string;
-        objectId: string;
-        username: string;
-        name: string;
-        bio: string;
-        image: string;
+    userId: string
     }
-    btnTitle: string;
-}
+    
+
 
 
 
     
 
-function PostThread({ userId }: {userId: string}) {
+function AttachThread({ userId }: Props) {
 
 
     const router = useRouter()
@@ -46,25 +41,32 @@ function PostThread({ userId }: {userId: string}) {
     
 
     const form = useForm({
-        resolver: zodResolver(PostValidation),
+        resolver: zodResolver(AttachValidation),
         defaultValues: {
-            post: '',
+            attach: '',
             accountId: userId,
         }
     })
 
-    const onSubmit = () => {
+    const onSubmit = async (values: z.infer<typeof AttachValidation>) => {
+        await createAttach({ 
+            text: values.attach, 
+            author: userId,
+            groupId: null,
+            path: pathname
+        })
 
+        router.push('/')
     }
 
     return (
         <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} 
-        className="flex flex-col justify-start gap-10">
+        className="mt-10 flex flex-col justify-start gap-10">
 
 <FormField
             control={form.control}
-            name="post"
+            name="attach"
             render={({ field }) => (
               <FormItem className="flex flex-col gap-3 w-full">
                 <FormLabel className="text-base-semibold text-light-2">
@@ -80,9 +82,13 @@ function PostThread({ userId }: {userId: string}) {
               </FormItem>
             )}
           />
+
+          <Button type="submit" className="bg-primary-500">
+            Post 
+          </Button>
         </form>
         </Form>
     )
 }
 
-export default PostThread
+export default AttachThread

@@ -44,10 +44,10 @@ export async function updateUser({
 
 export async function fetchUser(userId: string) {
     try {
-        connectToDB
+        connectToDB()
         
         return await User
-        .findOne({ id: userId })
+         .findOne({ id: userId })
         // .populate({
         //     path: 'groups'
         //     model: Groups

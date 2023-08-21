@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 import { fetchUser } from '@/lib/actions/user.actions'
-import PostThread from '@/components/forms/PostThread'
+import AttachThread from '@/components/forms/AttachThread'
 
 async function Page() {
     const user = await currentUser()
@@ -12,9 +12,9 @@ async function Page() {
     if(!userInfo?.onboarded) redirect('/onboarding')
     return (
         <>
-        <h1 className="head-text">Create Post</h1>
+        <h1 className="head-text">Create Attach</h1>
 
-        <PostThread userId={userInfo._id} />
+        <AttachThread userId={userInfo._id} />
         </>
     )
 }
