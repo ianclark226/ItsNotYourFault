@@ -99,3 +99,37 @@ export async function fetchAttachById(id: string) {
         throw new Error(`Error fetching attach: ${error.message}`)
     }
 }
+
+export async function addCommentToAttach(
+    attachId: string,
+    commentText: string,
+    userId: string,
+    path: string
+    ) {
+        try {
+
+            const originalAttach = await Attach.findById(attachId)
+
+            if(!originalAttach) {
+                throw new Error("Attach not found")
+            }
+
+            const commentAttach = new Attach ({
+                text: commentText,
+                author: userId,
+                parentId: attachId
+            })
+
+            const savedCommentAttach = await commentAttach.save()
+
+            originalAttach.children.push(savedCommentAttach._id)
+
+            await originalAttach.save()
+
+            revalidatePath(path)
+
+
+        } catch(error: any) {
+            throw new Error(`Error adding comment to attach: ${error.message}`)
+        }
+}

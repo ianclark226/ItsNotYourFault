@@ -3,6 +3,7 @@ import { fetchUser } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 import { fetchAttachById } from "@/lib/actions/attach.action"
+import Comment from "@/components/forms/Comment"
 
 const Page = async ({ params }: { params: { id: string }}) => {
 
@@ -15,6 +16,8 @@ const Page = async ({ params }: { params: { id: string }}) => {
     if(!userInfo.onboarded) redirect('/onboarding')
 
     const attach = await fetchAttachById(params.id)
+
+    
 
     return (
         <section className="relative">
@@ -30,6 +33,30 @@ const Page = async ({ params }: { params: { id: string }}) => {
               createdAt={attach.createdAt}
               comments={attach.children}
               />
+            </div>
+
+            <div className="mt-7">
+                <Comment 
+                attachId={attach.id}
+                currentUserImg={user.imageUrl}
+                currentUserId={JSON.stringify(userInfo._id)}
+                />
+            </div>
+            <div className="mt-10">
+                {attach.children.map((childItem: any) => (
+                    <AttachCard
+                    key={childItem._id}
+                    id={childItem._id}
+                    currentUserId={user?.id}
+                    parentId={childItem.parentId}
+                    content={childItem.text}
+                    author={childItem.author}
+                    group={childItem.group}
+                    createdAt={childItem.createdAt}
+                    comments={childItem.children}
+                    isComment
+                    />
+                ))}
             </div>
         </section>
     )
