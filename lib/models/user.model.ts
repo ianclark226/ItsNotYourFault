@@ -1,21 +1,40 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    id: { type: String, required: true},
-    username: { type: String, required: true, unique: true},
-    name: { type: String, required: true},
+    id: { 
+        type: String, 
+        required: true
+    },
+    username: { 
+        type: String, 
+        required: true, 
+        unique: true
+    },
+    name: { 
+        type: String, 
+        required: true
+    },
     image: String,
+
     bio: String,
-    comments: [
+    attaches: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Comments'
-        }
+            ref: "Attaches",
+        },
     ],
+
+    // comments: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Comments'
+    //     }
+    // ],
     onboarded: {
         type: Boolean,
         default: false,
     },
+
     groups: [
         {
             type: mongoose.Schema.Types.ObjectId,

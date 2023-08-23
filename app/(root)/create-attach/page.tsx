@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 import { fetchUser } from '@/lib/actions/user.actions'
-import AttachThread from '@/components/forms/AttachThread'
+import PostAttach from '@/components/forms/PostAttach'
 
 async function Page() {
     const user = await currentUser()
@@ -14,7 +14,7 @@ async function Page() {
         <>
         <h1 className="head-text">Create Attach</h1>
 
-        <AttachThread userId={userInfo._id} />
+        <PostAttach userId={userInfo._id} />
         </>
     )
 }

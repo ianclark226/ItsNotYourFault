@@ -33,7 +33,7 @@ interface Props {
 
     
 
-function AttachThread({ userId }: Props) {
+function PostAttach({ userId }: Props) {
 
 
     const router = useRouter()
@@ -91,4 +91,4 @@ function AttachThread({ userId }: Props) {
     )
 }
 
-export default AttachThread
+export default PostAttach
