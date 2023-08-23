@@ -134,3 +134,29 @@ sortBy?: SortOrder
         throw new Error(`Failed to fetch Users ${error.message}`)
     }
 }
+
+export async function getActivity(userId: string) {
+    try {
+        connectToDB()
+
+        const userAttaches = await Attach.find({ author: userId })
+
+        const childAttachIds = userAttaches.reduce((acc, userAttach) => {
+            return acc.concat(userAttach.children)
+        }, []) 
+
+        const replies = await Attach.find({
+            _id: { $in: childAttachIds },
+            author: { $ne: userId }
+        }).populate({
+            path: 'author',
+            model: User,
+            select: 'name image _id'
+        })
+
+        return replies
+
+    } catch(error: any) {
+        throw new Error(`Failed to fetch activity ${error.message}`)
+    }
+}
