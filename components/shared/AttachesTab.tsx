@@ -1,6 +1,7 @@
 import { fetchUserPosts } from "@/lib/actions/user.actions"
 import { redirect } from "next/navigation"
 import AttachCard from "../cards/AttachCard"
+import { fetchGroupPosts } from "@/lib/actions/group.actions"
 
 interface Props {
     currentUserId: string
@@ -10,7 +11,14 @@ interface Props {
 
 const AttachesTab = async({currentUserId, accountId, accountType }: Props) => {
 
-    let result = await fetchUserPosts(accountId)
+    let result: any
+    if(accountType === 'Group') {
+         result = await fetchGroupPosts(accountId)
+    } else {
+         result = await fetchUserPosts(accountId)
+    }
+
+    
 
    if(!result) redirect('/')
 

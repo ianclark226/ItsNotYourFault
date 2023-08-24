@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea";
 import * as z from 'zod'
+import { useOrganization } from "@clerk/nextjs";
 
 // import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
@@ -38,6 +39,7 @@ function PostAttach({ userId }: Props) {
 
     const router = useRouter()
     const pathname = usePathname()
+    const { organization } = useOrganization()
     
 
     const form = useForm({
@@ -49,12 +51,15 @@ function PostAttach({ userId }: Props) {
     })
 
     const onSubmit = async (values: z.infer<typeof AttachValidation>) => {
+      
         await createAttach({ 
-            text: values.attach, 
-            author: userId,
-            groupId: null,
-            path: pathname
-        })
+          text: values.attach, 
+          author: userId,
+          groupId: organization ? organization.id : null,
+          path: pathname
+      })
+      
+        
 
         router.push('/')
     }
