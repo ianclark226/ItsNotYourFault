@@ -8,6 +8,7 @@ import RightSideBar from "@/components/shared/RightSidebar";
 import Bottombar from "@/components/shared/Bottombar";
 
 import "../globals.css";
+import { dark } from "@clerk/themes";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,6 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider
+      appearance={{
+        baseTheme: dark
+      }}
       
     >
       <html lang='en'>

@@ -1,7 +1,7 @@
 const Page = () => {
     return (
         <section>
-            Groups
+            <h2 className="head-text mb-10">Groups</h2>
             </section>
     )
 }
