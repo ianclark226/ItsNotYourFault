@@ -105,17 +105,17 @@ export async function deleteAttach(id: string, path: string): Promise<void> {
   try {
     connectToDB();
 
-    // Find the thread to be deleted (the main thread)
+    // Find the attach to be deleted (the main attach)
     const mainAttach = await Attach.findById(id).populate("author group");
 
     if (!mainAttach) {
       throw new Error("Attach not found");
     }
 
-    // Fetch all child threads and their descendants recursively
+    // Fetch all child attaches and their descendants recursively
     const descendantAttaches = await fetchAllChildAttaches(id);
 
-    // Get all descendant thread IDs including the main thread ID and child thread IDs
+    // Get all descendant attach IDs including the main attach ID and child attach IDs
     const descendantAttachIds = [
       id,
       ...descendantAttaches.map((attach) => attach._id),
@@ -136,7 +136,7 @@ export async function deleteAttach(id: string, path: string): Promise<void> {
       ].filter((id) => id !== undefined)
     );
 
-    // Recursively delete child threads and their descendants
+    // Recursively delete child attaches and their descendants
     await Attach.deleteMany({ _id: { $in: descendantAttachIds } });
 
     // Update User model
@@ -148,7 +148,7 @@ export async function deleteAttach(id: string, path: string): Promise<void> {
     // Update Community model
     await Group.updateMany(
       { _id: { $in: Array.from(uniqueGroupIds) } },
-      { $pull: { threads: { $in: descendantAttachIds } } }
+      { $pull: { attaches: { $in: descendantAttachIds } } }
     );
 
     revalidatePath(path);
@@ -182,7 +182,7 @@ export async function fetchAttachById(attachId: string) {
           },
           {
             path: "children", // Populate the children field within children
-            model: Attach, // The model of the nested children (assuming it's the same "Thread" model)
+            model: Attach, // The model of the nested children (assuming it's the same "Attach" model)
             populate: {
               path: "author", // Populate the author field within nested children
               model: User,

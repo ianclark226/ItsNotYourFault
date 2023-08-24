@@ -54,7 +54,7 @@ isComment,
                             />
                         </Link>
 
-                        <div className="thread-car-bar" />
+                        <div className="attach-car-bar" />
                     </div>
                     <div className="flex w-full flex-col">
                     <Link href={`/profile/${author.id}`} className="w-fit">

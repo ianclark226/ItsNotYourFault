@@ -66,9 +66,9 @@ export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
 
-    // Find all threads authored by the user with the given userId
+    // Find all attaches authored by the user with the given userId
     const attaches = await User.findOne({ id: userId }).populate({
-      path: "threads",
+      path: "attaches",
       model: Attach,
       populate: [
         {
@@ -157,18 +157,18 @@ export async function getActivity(userId: string) {
   try {
     connectToDB();
 
-    // Find all threads created by the user
+    // Find all attaches created by the user
     const userAttaches = await Attach.find({ author: userId });
 
-    // Collect all the child thread ids (replies) from the 'children' field of each user thread
+    // Collect all the child attach ids (replies) from the 'children' field of each user attach
     const childAttachIds = userAttaches.reduce((acc, userAttach) => {
       return acc.concat(userAttach.children);
     }, []);
 
-    // Find and return the child threads (replies) excluding the ones created by the same user
+    // Find and return the child attaches (replies) excluding the ones created by the same user
     const replies = await Attach.find({
       _id: { $in: childAttachIds },
-      author: { $ne: userId }, // Exclude threads authored by the same user
+      author: { $ne: userId }, // Exclude attaches authored by the same user
     }).populate({
       path: "author",
       model: User,
